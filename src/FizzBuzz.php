@@ -14,4 +14,8 @@ final class FizzBuzz{
         return strval($value);
     }
 
+    public static function noOp( $value): void {
+        print($value);
+    }
+
 }
