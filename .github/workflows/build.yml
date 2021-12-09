@@ -1,0 +1,38 @@
+on:
+  # Trigger analysis when pushing in main or pull requests, and when creating
+  # a pull request.
+  push:
+    branches:
+      - main
+  pull_request:
+      types: [opened, synchronize, reopened]
+name: Main Workflow
+jobs: 
+  sonarcloud: 
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v2
+        with: 
+          fetch-depth: 0
+      
+      - name: "activate xdebug"
+        uses: MilesChou/docker-xdebug@v1.1.0
+      
+      - name: "install dependencies"
+        run: composer install
+      
+      - name: "code coverage"
+        env: 
+          XDEBUG_MODE: coverage
+        run: vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover=coverage-report.clover --log-junit=test-report.xml
+      
+      - name: "fix code coverage paths"
+        run: |
+         sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage-report.clover
+         sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' test-report.xml
+
+      - name: "SonarCloud Scan"
+        uses: sonarsource/sonarcloud-github-action@master
+        env: 
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          SONAR_TOKEN: "${{ secrets.SONAR_TOKEN }}"

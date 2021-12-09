@@ -38,3 +38,14 @@ execute one test class:
 ```
  ./vendor/bin/phpunit  tests/FizzBuzzTest.php
  ```
+
+ # BDD
+ ## Behat
+ [**Behat**](https://docs.behat.org/en/latest/) is an opensource **Behavior-Driven Development** framework for PHP.
+
+## behat/mink
+[**behat/mink**](https://mink.behat.org/en/latest/) For web testing.
+
+
+## selenium: 
+need to install chrome web driver according your OS
